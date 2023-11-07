@@ -64,6 +64,6 @@ response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers
 app.use('/api/auth', auth_route)
 app.use('/api/user', user_route) 
 
-// app.use('/', (req, res)=>{
-//     res.status(200).json("welcom skillGuardian homepage")
-// })
+app.use('/home', (req, res)=>{
+    res.status(200).json("welcom skillGuardian homepage")
+})
