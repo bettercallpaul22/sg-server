@@ -4,15 +4,12 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import { Error } from 'mongoose'
 import dotenv from 'dotenv'
-import authRoute from './route/authRoute'
-import userRoute from './route/userRoute'
 import http from "http";
-import { getAllUsers } from 'controller/userController'
 import cookieParser from "cookie-parser"
 import { MongoClient, ServerApiVersion } from "mongodb"
+import { router as auth_route } from './route/auth'
+import { router as user_route } from './route/user'
 
-const production_url = "https://skill-guardian-33bselne6-bettercallpaul22.vercel.app/"
-const dev_url = "http://localhost:3000"
 
 
 
@@ -33,8 +30,7 @@ app.use(cookieParser())
 
 
 app.use(cors({
-    origin: "http://localhost:3000",
-
+    origin: ["http://localhost:3000", "https://skill-guardian.vercel.app/"],
     credentials: true,
     allowedHeaders:["Content-type", "authorization"]
 
@@ -49,7 +45,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 
-mongoose.connect(process.env.MONGO_DB_URL)
+mongoose.connect(process.env.DATABASE_URL_MONGO)
     .then(() => console.log('mongoose connected'))
     .catch((err: Error) => console.error(err))
 
@@ -66,7 +62,7 @@ response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers
 
 
 app.use('/', (req, res)=>{
-    res.status(200).json("skillGuardian homepage")
+    res.status(200).json("welcom skillGuardian homepage")
 })
-app.use('/api/auth', authRoute)
-app.use('/api/user', userRoute) 
+app.use('/api/auth', auth_route)
+app.use('/api/user', user_route) 
