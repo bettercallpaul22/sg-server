@@ -4,7 +4,7 @@ import { verify } from "../milddleware/verify_token";
 
 export const router = express.Router()
 // router.post('/get', register)
-router.put('/all', all_users) 
+router.get('/all', all_users) 
 router.put('/update/:_id', verify, update) 
 router.get('/profile/:_id', profile) 
-router.get('/get-me/:_id', verify, get_me) 
+router.get('/get-me/:_id', get_me) 
