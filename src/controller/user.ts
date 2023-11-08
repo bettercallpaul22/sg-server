@@ -4,6 +4,17 @@ import { UserModel } from "../model/UserModel";
 
 
 
+// GET ALL USERS
+export const all_users = async (req: Request, res: Response) => {
+    try {
+        const users = await UserModel.find().select('-password');
+            return res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ error: 'something went wrong' });
+    }
+}
+
+
 
 export const profile = async (req: Request, res: Response) => {
     try {
