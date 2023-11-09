@@ -66,7 +66,7 @@ export const register = async (req: Request, res: Response) => {
 
             return res.status(201).json({
                 _id: user._id,
-                // user,
+                user,
                 success: true,
                 token,
             })
@@ -106,7 +106,7 @@ export const login = async (req: Request, res: Response) => {
                 })
 
                 return res.status(200).json({
-                    // user,
+                    user,
                     _id: user._id,
                     success: true,
                     token,

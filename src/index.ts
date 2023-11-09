@@ -48,13 +48,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 
-mongoose.connect(process.env.DATABASE_URL)
+mongoose.connect(process.env.MONGO_DB_URL)
     .then(() => console.log('mongoose connected'))
     .catch((err: Error) => console.error(err))
 
 
 app.use((request, response, next) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
+  response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 response.setHeader("Access-Control-Allow-Credentials", "true");
 response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
