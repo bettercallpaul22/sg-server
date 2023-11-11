@@ -33,7 +33,7 @@ app.use(cookieParser())
 
 
 app.use(cors({
-    origin: ["http://localhost:3000", "https://skill-guardian.vercel.app/"],
+    origin: ["http://localhost:3000", "https://skill-guardian.vercel.app"],
     credentials: true,
     allowedHeaders:["Content-type", "authorization"]
 
@@ -54,7 +54,7 @@ mongoose.connect( process.env.DATABASE_URL)
 
 
 app.use((request, response, next) => {
-  response.setHeader("Access-Control-Allow-Origin",  "https://skill-guardian.vercel.app/");
+  response.setHeader("Access-Control-Allow-Origin",  "https://skill-guardian.vercel.app");
 response.setHeader("Access-Control-Allow-Credentials", "true");
 response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
