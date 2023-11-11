@@ -48,7 +48,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 
-mongoose.connect(process.env.DATABASE_URL)
+mongoose.connect( process.env.DATABASE_URL)
     .then(() => console.log('mongoose connected'))
     .catch((err: Error) => console.error(err))
 
