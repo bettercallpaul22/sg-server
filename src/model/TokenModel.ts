@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 const TokenSchema = new mongoose.Schema({
     userId: String,
-    refreshToken: String,
+    token: String,
+    user:{}
    
 },
     { timestamps: true }

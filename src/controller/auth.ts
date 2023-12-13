@@ -2,17 +2,26 @@ import { Request, Response } from "express";
 import bcrypt from 'bcrypt'
 import { UserModel } from "../model/UserModel";
 import { createAccessToken, createRefreshToken } from "../milddleware/token";
+import TokenModel from "../model/TokenModel";
+import { z } from 'zod'
+import { login_schema, register_schema } from "../milddleware/input_validation";
+
+
+
 
 
 // Register
 export const register = async (req: Request, res: Response) => {
+    console.log(req.body)
     try {
-       
+        const result: any = register_schema.safeParse(req.body)
+        console.log(result)
+        if (!result.success) return res.status(401).json(`${result.error.issues[0]['message']}`)
         const {
             firstName,
             lastName,
             email,
-            gender,
+            gender, 
             city,
             state,
             country,
@@ -57,6 +66,8 @@ export const register = async (req: Request, res: Response) => {
             await user.save()
             const token = createAccessToken(user)
             const refreshToken = createRefreshToken(user)
+            await TokenModel.deleteOne({ userId: user._id })
+            new TokenModel({ userId: user._id, token: refreshToken, user }).save()
             res.cookie('jwt_token', refreshToken, {
                 httpOnly: true, // accesible only by web browser
                 secure: true, //https
@@ -76,7 +87,6 @@ export const register = async (req: Request, res: Response) => {
 
     } catch (error) {
         res.status(500).json(error.message)
-
     }
 }
 
@@ -88,16 +98,22 @@ export const register = async (req: Request, res: Response) => {
 
 // Login
 export const login = async (req: Request, res: Response) => {
+
     try {
+        const result: any = login_schema.safeParse(req.body)
+        if (!result.success) return res.status(401)
+            .json(`${result.error.issues[0]['message']}`)
         const { email, password } = req.body
         const user = await UserModel.findOne({ email })
         if (!user) {
             return res.status(404).json("Email doesn't exist")
-        } else { 
+        } else {
             const encrypt_password = bcrypt.compareSync(password, user.password)
             if (encrypt_password) {
                 const token = createAccessToken(user) as string
                 const refreshToken = createRefreshToken(user) as string
+                await TokenModel.deleteOne({ userId: user._id })
+                new TokenModel({ userId: user._id, token: refreshToken, user }).save()
                 res.cookie('jwt_token', refreshToken, {
                     httpOnly: true, // accesible only by web browser
                     secure: true, //https
@@ -112,11 +128,28 @@ export const login = async (req: Request, res: Response) => {
                     token,
                 })
             } else {
-                return res.status(401).json({ message: "Password is incorrect" })
+                return res.status(401).json("Password is incorrect")
             }
 
         }
 
+    } catch (error) {
+        if (error.name === 'ZodError') {
+            res.status(401).json(error.issues[0].message)
+        } else {
+
+            res.status(500).json(error.message)
+        }
+
+    }
+}
+
+
+
+export const refresh_token = async (req: Request, res: Response) => {
+    try {
+        const token = await TokenModel.find()
+        res.send(token)
     } catch (error) {
         res.status(500).json(error.message)
 

@@ -7,26 +7,15 @@ const UserSchema = new Schema({
     lastName: String,
     userName: String,
     email: String,
-    skillsAndExperience: String,
-    gender: String,
+    password: String,
     avatar: String,
-    skills:String,
-    // reviews:[String],
-    about: String,
     city: String,
     state: String,
     country: String,
-    charges: String,
-    bvn: String,
-    guarantor_name: String,
-    guarantor_number: String,
     mobile_number: String,
-    bank_number: String,
-    bank_name: String,
-    Skill_summary: String,
-    password: { type: String, required: true },
+    product:Array,
 },
-    { timestamps: true } 
+    { timestamps: true }
 
 )
 

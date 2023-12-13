@@ -13,7 +13,7 @@ export const createAccessToken = (user: any) => {
       // lastName:user.lastName,
       // email:user.email,
       // mobile_number:user.mobile_number,
-    }, process.env.TOKEN_SECRET, { expiresIn: '50m' })
+    }, process.env.TOKEN_SECRET, { expiresIn: '20' })
     return accessToken
 }
 

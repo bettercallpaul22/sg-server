@@ -9,8 +9,11 @@ import cookieParser from "cookie-parser"
 import { MongoClient, ServerApiVersion } from "mongodb"
 import { router as auth_route } from './route/auth'
 import { router as user_route } from './route/user'
+import { router as product_route} from './route/product'
 
 
+const production_url = "https://skill-guardian.vercel.app"
+const dev_url = "http://localhost:192.168.94.251"
 
 
 interface Message {
@@ -23,19 +26,19 @@ dotenv.config()
 
 const PORT = process.env.PORT || 5000
 const app = express()
-app.use(express.json({limit: 2000000}));
-app.use(express.urlencoded({limit: 2000000, extended: false}));
+app.use(express.json({ limit: 2000000 }));
+app.use(express.urlencoded({ limit: 2000000, extended: false }));
 // app.use(express.json({ limit: '50mb' }))
-app.use(bodyParser.json({limit:'20mb'}))
+app.use(bodyParser.json({ limit: '20mb' }))
 app.use(cookieParser())
 // app.use(express.urlencoded({limit: '50mb', extended: false}));
 
 
 
 app.use(cors({
-    origin: ["http://localhost:3000", "https://skill-guardian.vercel.app"],
+    origin: ["http://localhost:19006", "https://skill-guardian.vercel.app"],
     credentials: true,
-    allowedHeaders:["Content-type", "authorization"]
+    allowedHeaders: ["Content-type", "authorization"]
 
 }))
 
@@ -48,16 +51,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 
-mongoose.connect( process.env.DATABASE_URL)
+mongoose.connect(process.env.MONGO_DB_URL)
     .then(() => console.log('mongoose connected'))
     .catch((err: Error) => console.error(err))
 
-
 app.use((request, response, next) => {
-  response.setHeader("Access-Control-Allow-Origin",  "https://skill-guardian.vercel.app");
-response.setHeader("Access-Control-Allow-Credentials", "true");
-response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+    response.setHeader("Access-Control-Allow-Origin", "http://localhost:19006");
+    response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
     // res.status(200).json("skillGuardian homepage")
     next();
 })
@@ -65,8 +67,9 @@ response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers
 
 
 app.use('/api/auth', auth_route)
-app.use('/api/user', user_route) 
+app.use('/api/user', user_route)
+app.use('/api/product', product_route)
 
-app.use('/home', (req, res)=>{
+app.use('/home', (req, res) => {
     res.status(200).json("welcom skillGuardian homepage")
 })
