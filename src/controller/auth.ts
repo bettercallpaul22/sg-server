@@ -12,29 +12,17 @@ import { login_schema, register_schema } from "../milddleware/input_validation";
 
 // Register
 export const register = async (req: Request, res: Response) => {
-    console.log(req.body)
     try {
         const result: any = register_schema.safeParse(req.body)
-        console.log(result)
         if (!result.success) return res.status(401).json(`${result.error.issues[0]['message']}`)
         const {
             firstName,
             lastName,
             email,
-            gender, 
+            password,
             city,
             state,
             country,
-            avatar,
-            skills,
-            mobile_number,
-            bvn,
-            bank_number,
-            guarantor_name,
-            guarantor_number,
-            bank_name,
-            Skill_summary,
-            password,
         } = req.body
 
         const salt = bcrypt.genSaltSync(10)
@@ -43,25 +31,20 @@ export const register = async (req: Request, res: Response) => {
         if (user) {
             return res.status(400).json("Email already exists")
         } else {
-            const user = new UserModel({
+            const user =  await UserModel.create({
                 firstName,
                 lastName,
-                userName: email.split("@")[0],
                 email,
-                gender,
+                password: hPassword,
+                avatar:'',
+                bio:'',
+                gender:'',
+                credit:100,
+                verified:true,
                 city,
                 state,
                 country,
-                avatar,
-                skills,
-                mobile_number,
-                bvn,
-                bank_number,
-                guarantor_name,
-                guarantor_number,
-                bank_name,
-                Skill_summary,
-                password: hPassword
+                userName: email.split("@")[0],
             })
             await user.save()
             const token = createAccessToken(user)

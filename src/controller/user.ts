@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { UserModel } from "../model/UserModel";
+import { createAccessToken, createRefreshToken } from "../milddleware/token";
+import TokenModel from "../model/TokenModel";
 // import { UserModel } from "../model/UserModel";
 
 
@@ -59,9 +61,23 @@ export const update = async (req: any, res: Response) => {
             { new: true }
         )
         await user.save();
-
-        return res.status(200).json({ success: true, user });
+        const token = createAccessToken(user) as string
+        const refreshToken = createRefreshToken(user) as string
+        await TokenModel.deleteOne({ userId: user._id })
+        new TokenModel({ userId: user._id, token: refreshToken, user }).save()
+        res.cookie('jwt_token', refreshToken, {
+            httpOnly: true, // accesible only by web browser
+            secure: true, //https
+            sameSite: 'none', // cross-site cookie
+            maxAge: 7 * 24 * 60 * 60 * 1000, // cookie expiration time set to match token
+        })
+        return res.status(200).json({ 
+            user,
+            _id: user._id,
+            success: true,
+            token,
+        });
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json(error.message);
     }
 }

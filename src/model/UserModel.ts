@@ -5,15 +5,18 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     firstName: String,
     lastName: String,
-    userName: String,
     email: String,
     password: String,
     avatar: String,
+    userName: String,
+    gender: String,
     city: String,
     state: String,
     country: String,
-    mobile_number: String,
-    product:Array,
+    bio:String,
+    credit:Number,
+    verified:Boolean,
+
 },
     { timestamps: true }
 
