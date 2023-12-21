@@ -10,6 +10,7 @@ import { MongoClient, ServerApiVersion } from "mongodb"
 import { router as auth_route } from './route/auth'
 import { router as user_route } from './route/user'
 import { router as product_route} from './route/product'
+import { router as offer_route} from './route/offer_route'
 
 
 const production_url = "https://skill-guardian.vercel.app"
@@ -69,6 +70,7 @@ app.use((request, response, next) => {
 app.use('/api/auth', auth_route)
 app.use('/api/user', user_route)
 app.use('/api/product', product_route)
+app.use('/api/offer', offer_route)
 
 app.use('/home', (req, res) => {
     res.status(200).json("welcom skillGuardian homepage")

@@ -38,9 +38,7 @@ export const get_product = async (req: Request, res: Response) => {
 // Get user product
 export const get_user_products = async (req: Request, res: Response) => {
     try {
-        console.log("test")
         const owner_id  = req.params.owner_id
-        console.log("ownerId", owner_id)
         const product = await ProductModel.find({ owner_id })
         // // const user_products = await UserModel.findOne({ _id: owner_id })
         return res.status(200).json(product);
